@@ -17,16 +17,47 @@ This Go library provides a comprehensive client to interact with Alpha Vantage's
 
 ## Features
 
-- Simple and intuitive client functions to request data.
-- Structures and models that represent Alpha Vantage's response data.
-- Support for time series, crypto, and indicator data retrieval.
+The Alpha Vantage Go Wrapper offers comprehensive capabilities for financial data retrieval tailored to diverse financial data needs. Our features are outlined below:
+
+### **Time Series**
+
+- **Intraday**: Access real-time and historical intraday stock data.
+- **Daily**: Obtain daily open, high, low, and close (OHLC) stock data.
+- **Daily Adjusted**: Daily OHLC data accounting for stock splits and dividends.
+- **Weekly**: Retrieve consolidated weekly stock data.
+- **Weekly Adjusted**: Weekly stock data factoring in stock splits and dividends.
+- **Monthly**: Aggregated monthly stock data.
+- **Monthly Adjusted**: Monthly stock data inclusive of stock splits and dividends.
+- **Quote Endpoint**: Capture real-time stock data for any security.
+
+### **Cryptocurrencies**
+
+- **Exchange Rates Trending**: Get real-time exchange rates for digital and physical currencies.
+- **Intraday Premium**: Premium intraday crypto data access.
+- **Daily**: Source daily crypto OHLC data.
+- **Weekly**: Aggregated weekly crypto data.
+- **Monthly**: Monthly crypto data insights.
+
+### **Technical Indicators**
+
+Dive into technical indicator values for securities over time:
+
+- **Trend Analysis**: 
+  - SMA Trending, EMA Trending, WMA, DEMA, TEMA, TRIMA, KAMA, MAMA, VWAP Premium, T3, MACD Premium, MACDEXT, STOCH Trending, STOCHF, RSI Trending, STOCHRSI, WILLR, ADX Trending, ADXR, AROON Trending, BBANDS Trending, AD Trending, OBV Trending, HT_TRENDLINE, HT_SINE, HT_TRENDMODE, HT_DCPERIOD, HT_DCPHASE, HT_PHASOR.
+
+- **Momentum Indicators**:
+  - APO, PPO, MOM, BOP, ROC, ROCR, MFI, TRIX, ULTOSC, DX, MINUS_DI, PLUS_DI, MINUS_DM, PLUS_DM.
+
+- **Volume Indicators**:
+  - CCI Trending, CMO, AROONOSC, MIDPOINT, MIDPRICE, SAR, TRANGE, ATR, NATR, ADOSC.
+
 
 ## Installation
 
 To install the AlphaVantage API Wrapper, use the standard `go get`:
 
 ```bash
-go get github.com/YourGitHubUsername/YourRepoName
+go get github.com:masonJamesWheeler/alpha-vantage-go-wrapper
 ```
 
 ## Example Usage
@@ -37,8 +68,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"github.com/YourGitHubUsername/YourRepoName/client"
-	"github.com/YourGitHubUsername/YourRepoName/models"
+	"github.com:masonJamesWheeler/alpha-vantage-go-wrapper/client"
+	"github.com:masonJamesWheeler/alpha-vantage-go-wrapper/models"
 )
 
 func main() {
