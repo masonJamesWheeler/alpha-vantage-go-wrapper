@@ -10,7 +10,7 @@ This Go library provides a comprehensive client to interact with Alpha Vantage's
 - [Features](#features)
 - [Installation](#installation)
 - [Example Usage](#example-usage)
-- [Documentation](#documentation)
+- [Documentation](https://github.com/masonJamesWheeler/alpha-vantage-go-wrapper/wiki).
 - [Contribution](#contribution)
 - [License](#license)
 - [Contact](#contact)
@@ -62,21 +62,31 @@ go get github.com:masonJamesWheeler/alpha-vantage-go-wrapper
 
 ## Example Usage
 
+In the following example, we showcase how to fetch data for Cryptocurrency (Bitcoin), TimeSeries (Intraday for MSFT), and Bollinger Bands Indicator for MSFT.
+
+To begin with, set your API key as an environment variable. This ensures security and ease of changing the key without altering the code. If you are running your program in a terminal or command line, set the environment variable like this:
+
+```bash
+export API_KEY=your_api_key
+```
+
+Then, the Go program to access the data is as follows:
+
 ```go
 package main
 
 import (
 	"fmt"
 	"os"
-	"github.com:masonJamesWheeler/alpha-vantage-go-wrapper/client"
-	"github.com:masonJamesWheeler/alpha-vantage-go-wrapper/models"
+	"github.com/masonJamesWheeler/alpha-vantage-go-wrapper/models"
+	"github.com/masonJamesWheeler/alpha-vantage-go-wrapper/client"
 )
 
 func main() {
-	apiKey := os.Getenv("API_KEY") // Set your environment variable or define it here
+	apiKey := os.Getenv("API_KEY") // Fetch the environment variable
 	cli := client.NewClient(apiKey)
-
-	cryptoParams := models.CryptoOHLCParams{
+	
+	cryptoParams := models.CryptoParams{
 		Symbol: "BTC",
 		Interval: "1min",
 		Market: "USD",
@@ -95,6 +105,7 @@ func main() {
 		Interval: "1min",
 		TimePeriod: 60,
 		SeriesType: "close",
+		OutputSize: "compact",
 		DataType: "json",
 	}
 
@@ -102,21 +113,62 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	fmt.Println(cryptoResponse)
 
 	tsResponse, err := cli.GetIntraday(tsParams)
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	fmt.Println(tsResponse)
 
-	idResponse, err := cli.GetSMA(idParams)
+	idResponse, err := cli.GetBBANDS(idParams)
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	fmt.Println(idResponse)
 }
 ```
+
+Given the above code, if the API calls are successful, the output format you can expect is as below:
+
+```
+Daily Prices and Volumes for Digital Currency
+Digital Currency: Bitcoin (BTC)
+Market: United States Dollar (USD)
+Last Refreshed: 2023-09-11 00:00:00
+Time Zone: UTC
+
+Time                     Open                High                Low                 Close               Volume              MarketCap           
+=================================================================================================================================================
+2020-12-16 00:00:00      19426.43            21560.00            19278.60            21335.52            114306.34           114306.34           
+
+...
+
+Intraday (1min) open, high, low, close prices and volume
+Symbol: MSFT
+Last Refreshed: 2023-09-08 19:59:00
+Interval: 1min
+Output Size: Compact
+Time Zone: US/Eastern
+
+Time                     Open           High           Low            Close          Volume         
+====================================================================================================
+2023-09-08 17:59:00      334.66         334.67         334.66         334.66         44             
+
+...
+
+Bollinger Bands (BBANDS)
+Symbol: MSFT
+Last Refreshed: 2023-09-08 19:59:00
+Interval: 1min
+Output Size: 
+Time Zone: 
+
+Time                    Real Upper Band Real Middle Band Real Lower Band
+=====================================================================
+2023-08-18 05:01:00              316.13         315.45         314.77
+
+...
+```
+
+This structure provides a readable display of the fetched data. With this, users can easily comprehend and process the obtained financial metrics.
