@@ -43,18 +43,6 @@ func (c *Client) getTimeSeriesData(function string, params models.TimeSeriesPara
 	queryParams.Add("symbol", params.Symbol)
 	queryParams.Add("interval", params.Interval)
 
-	if adjStr, ok := params.Adjusted.(string); ok {
-		queryParams.Add("adjusted", adjStr)
-	} else if adjPtr, ok := params.Adjusted.(*string); ok {
-		queryParams.Add("adjusted", *adjPtr)
-	}
-
-	if extStr, ok := params.ExtendedHours.(string); ok {
-		queryParams.Add("adjusted", extStr)
-	} else if extPtr, ok := params.ExtendedHours.(*string); ok {
-		queryParams.Add("adjusted", *extPtr)
-	}
-
 	if monthStr, ok := params.Month.(string); ok {
 		queryParams.Add("month", monthStr)
 	} else if monthPtr, ok := params.Month.(*string); ok {
@@ -136,24 +124,6 @@ func (c *Client) getIndicator(indicatorName string, params models.IndicatorParam
 	return &indicatorResponse, nil
 }
 
-// GetCryptoExchangeRates retrieves crypto exchange rates based on the provided parameters.
-func (c *Client) GetCryptoExchangeRates(params models.CryptoExchangeRateParams) ([]byte, error) {
-	queryParams := url.Values{}
-	queryParams.Add("function", params.Function)
-	queryParams.Add("from_currency", params.FromCurrency)
-	queryParams.Add("to_currency", params.ToCurrency)
-	queryParams.Add("apikey", c.apiKey)
-
-	resp, err := http.Get(alphaVantageURL + "?" + queryParams.Encode())
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	return ioutil.ReadAll(resp.Body)
-}
-
 // GetCurrencyExchangeRate retrieves currency exchange rates based on the provided parameters.
 func (c *Client) GetCurrencyExchangeRate(params models.CurrencyExchangeParams) (*models.CurrencyExchangeRateResponse, error) {
 	queryParams := url.Values{}
@@ -182,8 +152,36 @@ func (c *Client) GetCurrencyExchangeRate(params models.CurrencyExchangeParams) (
 	return exchangeRateData, nil
 }
 
+// GetCryptoExchangeRates retrieves crypto exchange rates based on the provided parameters.
+func (c *Client) GetCryptoExchangeRates(params models.CryptoExchangeRateParams) (*models.CurrencyExchangeRateResponse, error) {
+	queryParams := url.Values{}
+	queryParams.Add("function", "CURRENCY_EXCHANGE_RATE")
+	queryParams.Add("from_currency", params.FromCurrency)
+	queryParams.Add("to_currency", params.ToCurrency)
+	queryParams.Add("apikey", c.apiKey)
+
+	resp, err := http.Get(alphaVantageURL + "?" + queryParams.Encode())
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	exchangeRateData := &models.CurrencyExchangeRateResponse{}
+	err = json.Unmarshal(data, exchangeRateData)
+	if err != nil {
+		return nil, err
+	}
+
+	return exchangeRateData, nil
+}
+
 // getCryptoData retrieves crypto data based on the provided parameters.
-func (c *Client) getCryptoData(functionType string, params models.CryptoOHLCParams) (*models.CryptoSeriesResponse, error) {
+func (c *Client) getCryptoData(functionType string, params models.CryptoParams) (*models.CryptoSeriesResponse, error) {
 	queryParams := url.Values{}
 	queryParams.Add("function", functionType)
 	queryParams.Add("symbol", params.Symbol)
@@ -218,22 +216,22 @@ func (c *Client) getCryptoData(functionType string, params models.CryptoOHLCPara
 }
 
 // GetCryptoIntraday retrieves intraday crypto data based on the provided parameters.
-func (c *Client) GetCryptoIntraday(params models.CryptoOHLCParams) (*models.CryptoSeriesResponse, error) {
+func (c *Client) GetCryptoIntraday(params models.CryptoParams) (*models.CryptoSeriesResponse, error) {
 	return c.getCryptoData("CRYPTO_INTRADAY", params)
 }
 
 // GetCryptoDaily retrieves daily crypto data based on the provided parameters.
-func (c *Client) GetCryptoDaily(params models.CryptoOHLCParams) (*models.CryptoSeriesResponse, error) {
+func (c *Client) GetCryptoDaily(params models.CryptoParams) (*models.CryptoSeriesResponse, error) {
 	return c.getCryptoData("DIGITAL_CURRENCY_DAILY", params)
 }
 
 // GetCryptoWeekly retrieves weekly crypto data based on the provided parameters.
-func (c *Client) GetCryptoWeekly(params models.CryptoOHLCParams) (*models.CryptoSeriesResponse, error) {
+func (c *Client) GetCryptoWeekly(params models.CryptoParams) (*models.CryptoSeriesResponse, error) {
 	return c.getCryptoData("DIGITAL_CURRENCY_WEEKLY", params)
 }
 
 // GetCryptoMonthly retrieves monthly crypto data based on the provided parameters.
-func (c *Client) GetCryptoMonthly(params models.CryptoOHLCParams) (*models.CryptoSeriesResponse, error) {
+func (c *Client) GetCryptoMonthly(params models.CryptoParams) (*models.CryptoSeriesResponse, error) {
 	return c.getCryptoData("DIGITAL_CURRENCY_MONTHLY", params)
 }
 

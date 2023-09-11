@@ -37,8 +37,6 @@ type TimeSeriesMetaData struct {
 type TimeSeriesParams struct {
 	Symbol        string
 	Interval      string
-	Adjusted      interface{}
-	ExtendedHours interface{}
 	Month         interface{}
 	OutputSize    interface{}
 	DataType      interface{}

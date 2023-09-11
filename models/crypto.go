@@ -19,7 +19,7 @@ import (
 	"strconv"
 )
 
-type CryptoOHLCParams struct {
+type CryptoParams struct {
 	Function   string
 	Symbol     string
 	Interval   string
@@ -197,7 +197,7 @@ func (c CryptoSeriesResponse) String() string {
 }
 
 
-// String function to nicely format the response
+// String function to nicely format the response for the Currency Exchange Rate API
 func (r CurrencyExchangeRateResponse) String() string {
 	return fmt.Sprintf(
 		"From: %s (%s)\nTo: %s (%s)\nExchange Rate: %s\nLast Refreshed: %s\nTime Zone: %s\nBid Price: %s\nAsk Price: %s",
