@@ -172,4 +172,3 @@ Time                    Real Upper Band Real Middle Band Real Lower Band
 ```
 
 This structure provides a readable display of the fetched data. With this, users can easily comprehend and process the obtained financial metrics.
-```
